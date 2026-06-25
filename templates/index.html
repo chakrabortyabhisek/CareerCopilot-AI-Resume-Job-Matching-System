@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CareerCopilot — AI Resume &amp; Job Match Studio</title>
+<meta name="description" content="Match your resume against any job description, close the skill gap, and generate a tailored cover letter.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="noise-layer" aria-hidden="true"></div>
+<div class="aurora" aria-hidden="true">
+  <span class="aurora-blob blob-a"></span>
+  <span class="aurora-blob blob-b"></span>
+  <span class="aurora-blob blob-c"></span>
+</div>
+
+<div class="app-shell" id="appShell">
+
+  <!-- ===== Header ===== -->
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 2 L36 11 V29 L20 38 L4 29 V11 Z" stroke="url(#gradLogo)" stroke-width="2.4" fill="rgba(124,58,237,0.12)"/>
+          <path d="M13 21 L18 26 L28 14" stroke="url(#gradLogo)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <defs>
+            <linearGradient id="gradLogo" x1="2" y1="2" x2="38" y2="38">
+              <stop offset="0" stop-color="#7C3AED"/>
+              <stop offset="0.5" stop-color="#3B82F6"/>
+              <stop offset="1" stop-color="#EC4899"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </span>
+      <span class="brand-name">Career<em>Copilot</em></span>
+    </div>
+    <div class="header-tagline">
+      <span class="status-dot" aria-hidden="true"></span>
+      AI Resume &amp; Job Match Studio
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="hero">
+    <p class="eyebrow">Built for freshers · Land the interview</p>
+    <h1 class="hero-title">
+      <span class="line">Make your resume</span>
+      <span class="line gradient-text">speak the job's language.</span>
+    </h1>
+    <p class="hero-sub">
+      Drop your resume and a job description. CareerCopilot scores your ATS match,
+      finds the gaps, and writes a cover letter built for the role — in seconds.
+    </p>
+    <div class="hero-pipeline" role="list" aria-label="How CareerCopilot works">
+      <span role="listitem" class="pipe-step" data-step="1">Read JD</span>
+      <span class="pipe-arrow" aria-hidden="true">→</span>
+      <span role="listitem" class="pipe-step" data-step="2">Scan Resume</span>
+      <span class="pipe-arrow" aria-hidden="true">→</span>
+      <span role="listitem" class="pipe-step" data-step="3">Find Gaps</span>
+      <span class="pipe-arrow" aria-hidden="true">→</span>
+      <span role="listitem" class="pipe-step" data-step="4">Score Match</span>
+      <span class="pipe-arrow" aria-hidden="true">→</span>
+      <span role="listitem" class="pipe-step" data-step="5">Write Letter</span>
+    </div>
+  </section>
+
+  <!-- ===== Main Workspace ===== -->
+  <main class="workspace">
+
+    <!-- LEFT: Inputs -->
+    <section class="panel input-panel glass-card" aria-labelledby="inputHeading">
+      <h2 id="inputHeading" class="panel-title">
+        <span class="title-index">01</span> Your application details
+      </h2>
+
+      <form id="analyzeForm" novalidate>
+
+        <div class="field-grid">
+          <div class="field">
+            <label for="candidateName">Your name</label>
+            <input type="text" id="candidateName" name="candidate_name" placeholder="Aanya Sharma" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="targetRole">Target role</label>
+            <input type="text" id="targetRole" name="target_role" placeholder="Python Developer Intern">
+          </div>
+          <div class="field">
+            <label for="companyName">Company</label>
+            <input type="text" id="companyName" name="company_name" placeholder="ABC Technologies">
+          </div>
+          <div class="field">
+            <label for="providerSelect">Cover letter engine</label>
+            <select id="providerSelect" name="provider">
+              <option value="Local fallback">Local fallback (no key needed)</option>
+              <option value="OpenAI">OpenAI</option>
+              <option value="Gemini">Gemini</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="resumeUpload">Resume (PDF)</label>
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-describedby="dropzoneHint">
+            <input type="file" id="resumeUpload" name="resume" accept="application/pdf" hidden>
+            <svg class="dz-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 16V4M12 4L7 9M12 4l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p class="dz-text" id="dropzoneHint"><strong>Click to upload</strong> or drag your resume PDF here</p>
+            <p class="dz-filename" id="dzFilename" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="jdText">Job description</label>
+          <textarea id="jdText" name="jd_text" rows="8" placeholder="Paste the full job description here..."></textarea>
+        </div>
+
+        <button type="submit" class="cta-button" id="analyzeBtn">
+          <span class="cta-label">Analyze Application</span>
+          <span class="cta-spark" aria-hidden="true"></span>
+        </button>
+        <p class="form-error" id="formError" role="alert" aria-live="assertive"></p>
+      </form>
+    </section>
+
+    <!-- RIGHT: Results -->
+    <section class="panel results-panel" aria-labelledby="resultsHeading">
+
+      <div class="results-empty glass-card" id="resultsEmpty">
+        <div class="empty-orb" aria-hidden="true"></div>
+        <h2 id="resultsHeading" class="panel-title">
+          <span class="title-index">02</span> Your match report
+        </h2>
+        <p>Fill in the form and hit <strong>Analyze Application</strong> — your ATS score, skill gaps, and a ready-to-send cover letter will appear right here.</p>
+      </div>
+
+      <div class="results-loading" id="resultsLoading" hidden>
+        <div class="loader-ring" aria-hidden="true"></div>
+        <p id="loadingText">Reading your resume…</p>
+      </div>
+
+      <div class="results-content" id="resultsContent" hidden>
+
+        <div class="score-card glass-card">
+          <div class="score-gauge-wrap">
+            <svg class="score-gauge" viewBox="0 0 200 200" aria-hidden="true">
+              <circle class="gauge-track" cx="100" cy="100" r="84"></circle>
+              <circle class="gauge-fill" id="gaugeFill" cx="100" cy="100" r="84"></circle>
+              <defs>
+                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#7C3AED"/>
+                  <stop offset="50%" stop-color="#3B82F6"/>
+                  <stop offset="100%" stop-color="#EC4899"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="score-value">
+              <span class="score-number" id="scoreNumber">0</span><span class="score-percent">%</span>
+              <span class="score-label">ATS Match</span>
+            </div>
+          </div>
+          <p class="score-note" id="scoreNote">Estimate only — keep your resume honest.</p>
+        </div>
+
+        <div class="skills-grid">
+          <div class="skill-card glass-card matched">
+            <h3><span class="dot dot-matched"></span> Matched skills</h3>
+            <div class="chip-row" id="matchedSkills"></div>
+          </div>
+          <div class="skill-card glass-card missing">
+            <h3><span class="dot dot-missing"></span> Missing keywords</h3>
+            <div class="chip-row" id="missingSkills"></div>
+          </div>
+        </div>
+
+        <div class="tabs glass-card">
+          <div class="tab-bar" role="tablist">
+            <button class="tab-btn active" role="tab" aria-selected="true" data-tab="suggestions">Suggestions</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="keywords">Keywords</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="letter">Cover Letter</button>
+          </div>
+
+          <div class="tab-panel" data-panel="suggestions">
+            <ul class="suggestion-list" id="suggestionList"></ul>
+          </div>
+
+          <div class="tab-panel" data-panel="keywords" hidden>
+            <div class="keyword-cols">
+              <div>
+                <h4>JD skills</h4>
+                <p class="kw-line" id="jdSkillsLine"></p>
+                <h4>Important JD terms</h4>
+                <p class="kw-line" id="jdTermsLine"></p>
+              </div>
+              <div>
+                <h4>Resume skills</h4>
+                <p class="kw-line" id="resumeSkillsLine"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="letter" hidden>
+            <textarea class="letter-area" id="letterArea" readonly></textarea>
+            <button class="cta-button secondary" id="downloadLetterBtn">
+              <span class="cta-label">Download cover letter</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>CareerCopilot · Scores are guidance, not a guarantee. Only claim skills you can defend in an interview.</p>
+  </footer>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
