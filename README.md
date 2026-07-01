@@ -19,6 +19,7 @@ fully responsive layout that looks and behaves the same way on desktop and mobil
 - Generates a cover letter using OpenAI, Gemini, or a local fallback template.
 - Modern animated UI: gradient text, glassmorphism cards, hover/scroll motion,
   large readable type, fully responsive (same look on phone and desktop).
+<img width="1248" height="886" alt="image" src="https://github.com/user-attachments/assets/1a1d089c-2126-45ba-ace3-ceacb5e739c4" />
 
 ## Tech Stack
 
